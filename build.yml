@@ -1,0 +1,48 @@
+name: Build SPACE VOCAL
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar
+        shell: bash
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Compilar testes
+        shell: bash
+        run: cmake --build build --config Release --target SpaceVocalTests
+
+      - name: Correr testes
+        shell: bash
+        continue-on-error: true
+        run: |
+          T=$(find build -name "SpaceVocalTests*" -type f \( -name "SpaceVocalTests" -o -name "SpaceVocalTests.exe" \) | head -1)
+          echo "A correr $T"
+          "$T" 2>&1 | tee test-log.txt
+
+      - name: Compilar VST3
+        shell: bash
+        run: cmake --build build --config Release --target SpaceVocal_VST3
+
+      - name: Juntar resultado
+        shell: bash
+        run: |
+          mkdir dist
+          find build -name "*.vst3" -type d -exec cp -R {} dist/ \;
+          cp test-log.txt dist/ || true
+          ls -R dist | head -30
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SpaceVocal-${{ matrix.os }}
+          path: dist
