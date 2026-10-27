@@ -2,11 +2,11 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "Parameters.h"
 #include "PresetManager.h"
-#include "DSP/Compressor.h"
-#include "DSP/Enhancer.h"
-#include "DSP/SpaceReverb.h"
-#include "DSP/TempoDelay.h"
-#include "DSP/Coral.h"
+#include "Compressor.h"
+#include "Enhancer.h"
+#include "SpaceReverb.h"
+#include "TempoDelay.h"
+#include "Coral.h"
 
 class SpaceVocalProcessor : public juce::AudioProcessor
 {
@@ -65,3 +65,4 @@ private:
     juce::AudioBuffer<float> scratch;   // 14 canais: wl wr dl dr tl tr sl sr rl rr el er cl cr
     double sampleRate = 44100.0;
 };
+
