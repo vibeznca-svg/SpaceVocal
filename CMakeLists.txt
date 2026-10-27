@@ -27,11 +27,10 @@ juce_add_plugin(SpaceVocal
     VST3_CATEGORIES Fx)
 
 set(SV_CORE_SOURCES
-    Source/PluginProcessor.cpp
-    Source/PresetManager.cpp)
+    PluginProcessor.cpp
+    PresetManager.cpp)
 
-target_sources(SpaceVocal PRIVATE ${SV_CORE_SOURCES} Source/PluginEditor.cpp)
-target_include_directories(SpaceVocal PRIVATE Source)
+target_sources(SpaceVocal PRIVATE ${SV_CORE_SOURCES} PluginEditor.cpp)
 target_compile_definitions(SpaceVocal PUBLIC
     JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JUCE_VST3_CAN_REPLACE_VST2=0
     JUCE_DISPLAY_SPLASH_SCREEN=0)
@@ -44,10 +43,10 @@ option(SV_BUILD_TESTS "Construir testes" ON)
 if(SV_BUILD_TESTS)
     juce_add_console_app(SpaceVocalTests PRODUCT_NAME "SpaceVocalTests")
     # Testes sem editor gráfico (SV_NO_EDITOR): só DSP, parâmetros, presets e estado reais
-    target_sources(SpaceVocalTests PRIVATE Tests/Tests.cpp ${SV_CORE_SOURCES})
-    target_include_directories(SpaceVocalTests PRIVATE Source)
+    target_sources(SpaceVocalTests PRIVATE Tests.cpp ${SV_CORE_SOURCES})
     target_compile_definitions(SpaceVocalTests PRIVATE JUCE_USE_CURL=0 JUCE_WEB_BROWSER=0 SV_NO_EDITOR=1)
     target_link_libraries(SpaceVocalTests PRIVATE
         juce::juce_audio_processors
         juce::juce_recommended_config_flags)
 endif()
+
